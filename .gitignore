@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+
+# Build directories
+release/**
+debug/**
+
+# VSCode configs
+.vscode/**
+
+# Mac files
+.DS_Store
+
