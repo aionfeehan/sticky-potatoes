@@ -41,3 +41,5 @@ debug/**
 # Mac files
 .DS_Store
 
+# Output files
+*.csv
