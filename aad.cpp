@@ -17,9 +17,29 @@ Var operator+(Var x, Var y) {
     return { .tape = x.tape, .index = x.tape->push2(x.index, 1, y.index, 1), .value = x.value + y.value };
 }
 
+Var operator+(double x, Var y) {
+    Var var_x = y.tape->var(x);
+    return var_x + y;
+}
+
+Var operator+(Var x, double y) {
+    Var var_y = x.tape->var(y);
+    return x + var_y;
+}
+
 Var operator-(Var x, Var y) {
     assert(x.tape == y.tape);
     return { .tape = x.tape, .index = x.tape->push2(x.index, 1, y.index, -1), .value = x.value - y.value };
+}
+
+Var operator-(double x, Var y) {
+    Var var_x = y.tape->var(x);
+    return var_x - y;
+}
+
+Var operator-(Var x, double y) {
+    Var var_y = x.tape->var(y);
+    return x - var_y;
 }
 
 Var operator*(Var x, Var y) {
@@ -27,9 +47,29 @@ Var operator*(Var x, Var y) {
     return { .tape = x.tape, .index = x.tape->push2(x.index, y.value, y.index, x.value), .value = x.value * y.value };
 }
 
+Var operator*(double x, Var y) {
+    Var var_x = y.tape->var(x);
+    return var_x * y;
+}
+
+Var operator*(Var x, double y) {
+    Var var_y = x.tape->var(y);
+    return x * var_y;
+}
+
 Var operator/(Var x, Var y) {
     assert(x.tape == y.tape);
-    return { .tape = x.tape, .index = x.tape->push2(x.index, 1 / y.value, y.index, - x.value / (y.value * y.value)), .value = x.value / y.value };
+    return { .tape = x.tape, .index = x.tape->push2(x.index, 1.0 / y.value, y.index, - x.value / (y.value * y.value)), .value = x.value / y.value };
+}
+
+Var operator/(double x, Var y) {
+    Var var_x = y.tape->var(x);
+    return var_x / y;
+}
+
+Var operator/(Var x, double y) {
+    Var var_y = x.tape->var(y);
+    return x / var_y;
 }
 
 Var exp(Var x) {
@@ -43,6 +83,15 @@ Var log(Var x) {
 Var pow(Var x, Var y) {
     assert(x.tape == y.tape);
     return exp(y * log(x));
+}
+
+Var pow(Var x, double y) {
+    Var var_y = x.tape->var(y);
+    return pow(x, var_y);
+}
+
+Var sqrt(Var x) {
+    return pow(x, 0.5);
 }
 
 double Grad::wrt(const Var& var) {
@@ -80,7 +129,7 @@ size_t Tape::push0() {
 
 size_t Tape::push1(size_t parent, double weight) {
     auto l = len();
-    nodes_.push_back({ .weights = {weight, 1}, .parents = {parent, 1} });
+    nodes_.push_back({ .weights = {weight, 0}, .parents = {parent, 1} });
     return l;
 }
 

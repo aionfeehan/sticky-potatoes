@@ -2,13 +2,14 @@
 #include <cmath>
 #include <cassert>
 #include "aad.hpp"
+#include "aad_tests.hpp"
 
-void test_aad() {
+void aad_tests::test_aad() {
     Tape t;
-    auto x = t.var(0.5);
-    auto y = t.var(4.0);
+    auto x = t.var(9.0);
+    auto y = t.var(0.5);
     auto z1 = x * y;
-    auto z2 = pow(y, x);
+    auto z2 = pow(x, y);
 
     Grad grad1 = z1.grad();
     Grad grad2 = z2.grad();
@@ -17,16 +18,10 @@ void test_aad() {
     auto dz2dx = grad2.wrt(x);
     auto dz2dy = grad2.wrt(y);
 
-    assert(fabs(dz1dx - 4.0) < 1e-15);
-    assert(fabs(dz1dy - 0.5) < 1e-15);
-    assert(fabs(dz2dy - 1 / (2 * sqrt(y.value))) < 1e-15);
-    assert(fabs(dz2dx - (log(x) * z2).value) < 1e-15);
+    assert(fabs(dz1dx - y.value) < 1e-15);
+    assert(fabs(dz1dy - x.value) < 1e-15);    
+    assert(fabs(dz2dy - (log(x) * z2).value) < 1e-15);
+    assert(fabs(dz2dx - 1 / (2 * z2.value)) < 1e-15);
 
     return;
-}
-
-int main() {
-    test_aad();
-    std::cout << "Test passed" << "\n";
-    return 0;
 }

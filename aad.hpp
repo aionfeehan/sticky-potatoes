@@ -34,12 +34,26 @@ class Grad {
 
 
 Var operator+(Var x, Var y);
+Var operator+(double x, Var y);
+Var operator+(Var x, double y);
+
 Var operator-(Var x, Var y);
+Var operator-(double x, Var y);
+Var operator-(Var x, double y);
+
 Var operator*(Var x, Var y);
+Var operator*(double x, Var y);
+Var operator*(Var x, double y);
+
 Var operator/(Var x, Var y);
+Var operator/(double x, Var y);
+Var operator/(Var x, double y);
+
 Var exp(Var x);
 Var log(Var x);
 Var pow(Var x, Var y);
+Var pow(Var x, double y);
+Var sqrt(Var x);
 
 
 class Tape {
