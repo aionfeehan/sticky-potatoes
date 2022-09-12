@@ -23,7 +23,7 @@ struct Node {
 
 struct Var;
 
-const size_t TAPE_SIZE = 1000;
+const size_t TAPE_SIZE = 100;
 
 class Grad {
 
