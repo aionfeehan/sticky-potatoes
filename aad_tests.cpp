@@ -6,8 +6,8 @@
 
 void aad_tests::test_aad() {
     Tape t;
-    auto x = t.var(9.0);
-    auto y = t.var(0.5);
+    Var x = t.var(9.0);
+    Var y = t.var(0.5);
     auto z1 = x * y;
     auto z2 = pow(x, y);
 

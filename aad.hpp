@@ -11,9 +11,10 @@
 
 #pragma once
 
-#include <vector>
-#include <cmath>
+#include <array>
 #include <cassert>
+#include <cmath>
+
 
 struct Node {
     double weights[2];
@@ -22,53 +23,56 @@ struct Node {
 
 struct Var;
 
+const size_t TAPE_SIZE = 1000;
+
 class Grad {
 
-    public:
-        explicit Grad(std::vector<double>&& derivs): derivs_{derivs}{};
-        double wrt(const Var& var);
+public:
+    explicit Grad(std::array<double, TAPE_SIZE>&& derivs) : derivs_{ derivs } {};
+    double wrt(const Var& var);
 
-    private:
-        std::vector<double> derivs_;
+private:
+    std::array<double, TAPE_SIZE> derivs_;
 };
 
 
-Var operator+(Var x, Var y);
-Var operator+(double x, Var y);
-Var operator+(Var x, double y);
+Var operator+(const Var& x, const Var& y);
+Var operator+(double x, const Var& y);
+Var operator+(const Var& x, double y);
 
-Var operator-(Var x, Var y);
-Var operator-(double x, Var y);
-Var operator-(Var x, double y);
+Var operator-(const Var& x, const Var& y);
+Var operator-(double x, const Var& y);
+Var operator-(const Var& x, double y);
 
-Var operator*(Var x, Var y);
-Var operator*(double x, Var y);
-Var operator*(Var x, double y);
+Var operator*(const Var& x, const Var& y);
+Var operator*(double x, const Var& y);
+Var operator*(const Var& x, double y);
 
-Var operator/(Var x, Var y);
-Var operator/(double x, Var y);
-Var operator/(Var x, double y);
+Var operator/(const Var& x, const Var& y);
+Var operator/(double x, const Var& y);
+Var operator/(const Var& x, double y);
 
-Var exp(Var x);
-Var log(Var x);
-Var pow(Var x, Var y);
-Var pow(Var x, double y);
-Var sqrt(Var x);
+Var exp(const Var& x);
+Var log(const Var& x);
+Var pow(const Var& x, const Var& y);
+Var pow(const Var& x, double y);
+Var sqrt(const Var& x);
 
 
 class Tape {
 
-    public:
-        Tape() {}
-        Var var(double value);
-        size_t push0();
-        size_t push1(size_t parent, double weight);
-        size_t push2(size_t parent_1, double weight_1, size_t parent_2, double weight_2);
-        size_t len();
+public:
+    Tape() { node_index_ = 0; }
+    Var var(double value);
+    size_t push0();
+    size_t push1(size_t parent, double weight);
+    size_t push2(size_t parent_1, double weight_1, size_t parent_2, double weight_2);
+    size_t len();
 
-    private:
-        friend struct Var;
-        std::vector<Node> nodes_;
+private:
+    friend struct Var;
+    std::array<Node, TAPE_SIZE> nodes_{};
+    size_t node_index_;
 
 };
 
@@ -78,3 +82,4 @@ struct Var {
     double value;
     Grad grad();
 };
+
